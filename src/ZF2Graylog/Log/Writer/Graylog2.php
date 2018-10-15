@@ -20,15 +20,17 @@ class Graylog2 extends AbstractWriter
      */
     protected $formatter;
 
-    public function __construct($facility, AbstractTransport $transport)
+    public function __construct($options)
     {
+        $facility = $options['facility'] ?? null;
+        $transport = $options['transport'] ?? null;
         $messageValidator = new MessageValidator();
 
         $this->setPublisher(new Publisher($transport, $messageValidator));
         $this->setFormatter(new Gelf($facility));
     }
 
-    public function setFormatter($formatter)
+    public function setFormatter($formatter, array $options = null)
     {
         if (!($formatter instanceof Gelf)) {
             throw new \RuntimeException('Wrong formatter for graylog logger');
